@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Inputosaurus Text</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+	<link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap.no-responsive.no-icons.min.css" rel="stylesheet">
+
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/cupertino/jquery-ui.css" rel="stylesheet">
+    <link href="./inputosaurus.css" rel="stylesheet">
+	<link href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+	  h2, h3{
+		  margin : 40px 0 5px;
+	  }
+	  h3{
+		  border-bottom : 1px solid #ddd;
+		  color : #655;
+		  line-height : 30px;
+	  }
+	  section{
+		  margin-left : 20px;
+	  }
+	  .markup a{
+		  text-decoration : none;
+	  }
+	  .markup div{
+		  display : none;
+	  }
+      section.examples p{
+		  color : #777;
+		}
+		section.examples ul{
+				margin : 5px 0;
+		}
+		section.examples article:first-child h3{
+			margin-top : 10px;
+		}
+	  	#options li{
+			color : #944;
+		}
+		#options li span{
+			font-family : Monaco, Courier;
+			color : #666;
+			font-size : 80%;
+		}
+		#options li p{
+			color : #222;
+		}
+		input.original{
+			width : 350px;
+		}
+    </style>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body data-spy="scroll" data-target=".navbar">
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">Inputosaurus Text</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#description">Description</a></li>
+              <li class="active"><a href="#examples">Examples</a></li>
+              <li class="active"><a href="#options">Options</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <h1 id="description">Inputosaurus Text</h1>
+	  <p>An &lt;input&gt; that allows for multiple delimited values, parse hooks, autocomplete, keyboard shortcuts etc.</p>
+
+		<h2 id="examples">Examples</h2>
+		<section class="examples">
+		  <article>
+			<h3>Default</h3>
+			<p>
+				- The instantiated input's value is set to a list of values delimited with a comma (<code>outputDelimiter</code>). <br />
+				- As values are input, if a comma or semi-colon (<code>inputDelimiter</code>) is detected, the value is automatically parsed.
+			</p>
+
+			<input type="text" value="support@mysite.com" id="widget1" />
+			<div class="markup">
+				<a href="javascript:void(0);">toggle hidden input/markup</a>
+				<div>
+					<input type="text" id="widget1_reflect" class="original" disabled="disabled" />
+					<pre class="prettyprint linenums">$('#widget1').inputosaurus({
+    width : '350px'
+});</pre>
+				</div>
+			</div>
+		</article>
+
+		<article>
+			<h3>Autocomplete</h3>
+			<input type="text" value="" id="widget2" />
+			<div class="markup">
+				<a href="javascript:void(0);">toggle hidden input/markup</a>
+				<div>
+					<input type="text" id="widget2_reflect" class="original" disabled="disabled" />
+					<pre class="prettyprint linenums">$('#widget2').inputosaurus({
+    width : '350px',
+    autoCompleteSource : ['alabama', 'illinois', 'kansas', 'kentucky', 'new york']
+});</pre>
+				</div>
+			</div>
+		</article>
+
+		<article>
+			<h3>Parse Hook</h3>
+			<p>
+				- A good use case for the parse hook is input validation.<br />
+				- For this example, enter two strings separated with a space to trigger the parse hook (which will surround the strings with double quotes).
+			</p>
+			<input type="text" value="" id="widget3" />
+			<div class="markup">
+				<a href="javascript:void(0);">toggle hidden input/markup</a>
+				<div>
+					<input type="text" id="widget3_reflect" class="original" disabled="disabled" />
+					<pre class="prettyprint linenums">$('#widget3').inputosaurus({
+    width : '350px',
+    outputDelimiter : ' OR ',
+    postParseHook : function(valArr){
+        return $.map(valArr, function(val){
+            return /\s/.test(val) ? '"' + val + '"' : val;
+        });
+    }
+});</pre>
+				</div>
+			</div>
+		</article>
+		</section>
+
+		<h2>Options</h2>
+		<section id="options">
+			<ul>
+				<li>allowDuplicates  <span>(type : Boolean :: default : false)</span></li>
+
+				<li>autoCompleteSource <span>(type : Array :: default : [])</span>
+					<p class="alert alert-info">when specified, autocomplete will be instantiated</p>
+				</li>
+
+				<li>inputDelimiters <span>(type : Array :: default : [',', ';'])</span>
+					<p class="alert alert-info">auto parsing trigger</p>
+				</li>
+
+				<li>outputDelimiter <span>(type : String :: default : ',')</span>
+					<p class="alert alert-info">this separator is used to rejoin all input items back to the value of the original &lt;input&gt;</p>
+				</li>
+
+				<li>parseHook <span>(type : Function :: default : null)</span>
+					<p class="alert alert-info">manipulate and return the input value after parseInput() parsing<br />
+					the array of tag names is passed and expected to be returned as an array after manipulation</p>
+				</li>
+
+				<li>width <span>(type : String/Integer :: default : null)</span></li>
+
+				<li>wrapperElement <span>(type : String :: default : null)</span>
+					<p class="alert alert-info">optional wrapper for widget</p>
+				</li>
+
+			</ul>
+		</section>
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+	
+    <script src="./inputosaurus.js"></script>
+	<script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+	<script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
+
+	<script>
+		$('#widget1').inputosaurus({
+			width : '350px',
+			change : function(ev){
+				$('#widget1_reflect').val(ev.target.value);
+			}
+		});
+		$('#widget2').inputosaurus({
+			width : '350px',
+			autoCompleteSource : ['alabama', 'illinois', 'kansas', 'kentucky', 'new york'],
+			change : function(ev){
+				$('#widget2_reflect').val(ev.target.value);
+			}
+		});
+		$('#widget3').inputosaurus({
+			width : '350px',
+			outputDelimiter : ' OR ',
+			parseHook : function(valArr){
+				return $.map(valArr, function(val){
+					val = $.trim(val);
+					return /\s/.test(val) ? '"' + val + '"' : val;
+				});
+			},
+			change : function(ev){
+				$('#widget3_reflect').val(ev.target.value);
+			}
+		});
+
+		$('.markup').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
+
+		prettyPrint();
+	</script>
+
+  </body>
+</html>
