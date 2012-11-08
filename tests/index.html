@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Inputosaurus Text - QUnit Tests</title>
+	<link rel="stylesheet" href="qunit-1.10.0.css">
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+	<script src="../inputosaurus.js"></script>
+
+	<script src="qunit-1.10.0.js"></script>
+	<script>
+
+		(function($){
+			var $input = $('<input type="text" value="chicago,illinois">'),
+				instance;
+
+				$input.inputosaurus({
+					inputDelimiters : [';', ','],
+					parseHook : function(valArr){
+						return $.map(valArr, function(val){
+							return $.trim(val).indexOf(' ') > -1 ? '"' + val + '"' : val;
+						});
+					}
+				});
+
+			instance = $input.data('inputosaurus');
+			
+			instance._chosenValues.push({
+				key : 'mi_1234',
+				value : 'sprout'
+			});
+
+			test('_containsDelimiter', function() {
+				var origDelimiters = instance.options.inputDelimiters;
+
+				instance.options.inputDelimiters = [';'];
+
+				ok(instance._containsDelimiter('sprout') === false, 'no delimiter');
+				ok(instance._containsDelimiter('spro;ut') === ';', 'delimiter present');
+
+				instance.options.inputDelimiters = origDelimiters;
+			});
+
+			test('_buildValue', function() {
+				var origDelimiter = instance.options.outputDelimiter;
+
+				instance.options.inputDelimiters = ';';
+
+				ok(instance._containsDelimiter('sprout') === false, 'no delimiter');
+				ok(instance._containsDelimiter('spro;ut') === ';', 'delimiter present');
+
+				instance.options.outputDelimiter = origDelimiter;
+			});
+
+			test('tag item validation', function(){
+				instance._renderTags();
+
+				// 3 tags (chicago,illinois,sprout) + 1 hidden/orig input + 1 new widget input
+				ok(instance.elements.ul.children().size() === 5, 'proper number of <li> elements');
+				ok(instance.elements.ul.find('li[data-inputosaurus="mi_1234"]').size() === 1, 'proper data attr on tag');
+			});
+
+			test('refresh', function(){
+				instance.element.val('sprout');
+				instance.refresh();
+
+				ok(instance.elements.ul.children().size() === 3, 'proper number of <li> elements');
+			});
+
+			test('parseInput', function(){
+				var event = $.Event( 'keydown', { which : $.ui.keyCode.ENTER });
+
+				instance.element.val('');
+				instance.refresh();
+
+				// ignore whitespace
+				instance.elements.input.val('chicago;il;   ');
+				instance.elements.input.trigger( event );
+
+				ok(instance._chosenValues.length === 2, 'proper value count');
+				ok(instance._chosenValues[0].value === 'chicago', 'proper value string 0');
+				ok(instance._chosenValues[1].value === 'il', 'proper value string 1');
+			});
+
+			test('parseHook - surround a value, that contains a space, with quotes', function(){
+				instance.element.val('sprout rocks');
+				instance.refresh();
+
+				ok(instance._chosenValues[0].value === '"sprout rocks"', 'should have been surrounded with quotes');
+			});
+
+			test('traverse tags', function(){
+				var event = $.Event( 'keydown', { which : $.ui.keyCode.LEFT });
+
+				instance.element.val('sprout,rocks');
+				instance.refresh();
+
+				instance.elements.ul.find('li.inputosaurus-input input').trigger( event );
+
+				ok(instance.elements.ul.find('li:nth-child(2)').hasClass('inputosaurus-selected'), 'LEFT arrow to select last tag');
+
+				event = $.Event( 'keydown', { which : $.ui.keyCode.LEFT });
+				instance.elements.ul.find('li:nth-child(2) a').trigger( event );
+
+				ok(instance.elements.ul.find('li:nth-child(1)').hasClass('inputosaurus-selected'), 'LEFT arrow to select previous tag');
+
+				event = $.Event( 'keydown', { which : $.ui.keyCode.RIGHT });
+				instance.elements.ul.find('li:nth-child(1) a').trigger( event );
+
+				ok(instance.elements.ul.find('li:nth-child(2)').hasClass('inputosaurus-selected'), 'RIGHT arrow to select next tag');
+			});
+
+			test('edit a tag', function(){
+				var event = $.Event( 'keydown', { which : 69 });
+
+				instance.element.val('sprout,rocks');
+				instance.refresh();
+
+				ok(instance._chosenValues.length == 2, 'initial value count correct');
+
+				// simulate 'e' keydown
+				instance.elements.ul.find('li:nth-child(2) a').trigger( event );
+
+				ok(instance.elements.input.val() === 'rocks', 'edited value exists in visible input');
+				ok(instance._chosenValues.length == 1, 'final value count correct');
+			});
+
+		})(jQuery);
+	</script>
+</body>
+</html>
