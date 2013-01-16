@@ -28,7 +28,7 @@
 
 			// bindable events
 			//
-			// 'change' - triggered whenever a tag is added or removed (should be similart to binding the the change event of the instantiated input
+			// 'change' - triggered whenever a tag is added or removed (should be similar to binding the the change event of the instantiated input
 			// 'keyup' - keyup event on the newly created input
 			
 			// while typing, the user can separate values using these delimiters
@@ -45,8 +45,8 @@
 
 			width : null,
 
-			// simply passing an array of values will instantiate autocomplete
-			autoCompleteSource : [],
+			// simply passing an autoComplete source (array, string or function) will instantiate autocomplete functionality
+			autoCompleteSource : '',
 
 			// manipulate and return the input value after parseInput() parsing
 			// the array of tag names is passed and expected to be returned as an array after manipulation
@@ -90,7 +90,7 @@
 		},
 
 		_instAutocomplete : function() {
-			if(this.options.autoCompleteSource.length){
+			if(this.options.autoCompleteSource){
 				var widget = this;
 
 				this.elements.input.autocomplete({
@@ -105,7 +105,7 @@
 						widget.parseInput();
 					},
 					open : function() {
-						$(this).autocomplete('widget').width(widget.elements.ul.width());
+						$(this).autocomplete('widget').width(widget.elements.ul.outerWidth());
 					}
 				});
 			}
@@ -123,7 +123,7 @@
 
 			if(delimiterFound !== false){
 				values = val.split(delimiterFound);
-			} else if(!ev || ev.which === $.ui.keyCode.ENTER){
+			} else if(!ev || ev.type === 'blur' || ev.which === $.ui.keyCode.ENTER){
 				values.push(val);
 				ev && ev.preventDefault();
 			}
@@ -182,6 +182,7 @@
 			ev.stopPropagation();
 
 			if((!$(ev.currentTarget).val() || (('selectionStart' in ev.currentTarget) && ev.currentTarget.selectionStart === 0 && ev.currentTarget.selectionEnd === 0)) && lastTag.size()){
+				ev.preventDefault();
 				lastTag.find('a').focus();
 			}
 			
@@ -297,10 +298,9 @@
 					self._chosenValues.push(obj);
 
 					self._renderTags();
-					self._setValue(self._buildValue());
-					self._trigger('change');
 				}
 			});
+			self._setValue(self._buildValue());
 		},
 
 		_buildValue : function() {
@@ -315,7 +315,12 @@
 		},
 
 		_setValue : function(value) {
-			this.element.val(value);
+			var val = this.element.val();
+
+			if(val !== value){
+				this.element.val(value);
+				this._trigger('change');
+			}
 		},
 
 		// @name text for tag
@@ -354,7 +359,6 @@
 			indexFound !== false && widget._chosenValues.splice(indexFound, 1);
 
 			widget._setValue(widget._buildValue());
-			widget._trigger('change');
 
 			$(ev.currentTarget).parent().remove();
 		},
@@ -396,6 +400,7 @@
 			this.elements.input.on('keydown.inputosaurus', {widget : widget}, this._inputKeypress);
 			this.elements.input.on('change.inputosaurus', {widget : widget}, this._inputKeypress);
 			this.elements.input.on('focus.inputosaurus', {widget : widget}, this._inputFocus);
+			this.elements.input.on('blur.inputosaurus', {widget : widget}, this.parseInput);
 
 			this.elements.ul.on('click.inputosaurus', {widget : widget}, this._focus);
 			this.elements.ul.on('click.inputosaurus', 'a', {widget : widget}, this._removeTag);
