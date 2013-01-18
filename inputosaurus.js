@@ -98,7 +98,7 @@
 						of : this.elements.ul
 					},
 					source : this.options.autoCompleteSource,
-					minLength : 0,
+					minLength : 1,
 					select : function(ev, ui){
 						ev.preventDefault();
 						widget.elements.input.val(ui.item.value);
@@ -110,6 +110,25 @@
 				});
 			}
 		},
+
+		_autoCompleteMenuPosition : function() {
+			var widget;
+			if(this.options.autoCompleteSource){
+				widget = this.elements.input.data('autocomplete');
+				widget && widget.menu.element.position({
+					of: this.elements.ul,
+					my: 'left top',
+					at: 'left bottom',
+					collision: 'none'
+				});
+			}
+		},
+
+		/*_closeAutoCompleteMenu : function() {
+			if(this.options.autoCompleteSource){
+				this.elements.input.autocomplete('close');
+			}
+		},*/
 
 		parseInput : function(ev) {
 			var widget = (ev && ev.data.widget) || this,
@@ -123,9 +142,13 @@
 
 			if(delimiterFound !== false){
 				values = val.split(delimiterFound);
-			} else if(!ev || ev.type === 'blur' || ev.which === $.ui.keyCode.ENTER){
+			} else if(!ev || ev.which === $.ui.keyCode.ENTER){
 				values.push(val);
 				ev && ev.preventDefault();
+
+			// prevent autoComplete menu click from causing a false 'blur'
+			} else if(ev.type === 'blur' && !$('#ui-active-menuitem').size()){
+				values.push(val);
 			}
 
 			$.isFunction(widget.options.parseHook) && (values = widget.options.parseHook(values));
@@ -160,6 +183,11 @@
 				default :
 					widget.parseInput(ev);
 					widget._resizeInput(ev);
+			}
+
+			// reposition autoComplete menu as <ul> grows and shrinks vertically
+			if(widget.options.autoCompleteSource){
+				setTimeout(function(){widget._autoCompleteMenuPosition.call(widget);}, 200);
 			}
 		},
 
