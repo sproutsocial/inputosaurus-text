@@ -29,7 +29,7 @@
 	"homepage": "https://sproutsocial.github.com/inputosaurus-text",
 	"docs": "https://github.com/sproutsocial/inputosaurus-text/blob/master/README.md",
 	"dependencies": {
-		"jquery": ">=1.7"
+		"jquery": ">=1.7",
 		"jquery ui": ">=1.7"
 	}
 }
