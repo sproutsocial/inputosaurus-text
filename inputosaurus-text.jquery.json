@@ -1,7 +1,7 @@
 {
 	"name": "inputosaurus-text",
 	"title": "Inputosaurus Text",
-	"description": "An <input> (jQuery UI widget) that allows for multiple delimited values, parse hooks, autocomplete, keyboard shortcuts etc.",
+	"description": "An &lt;input&gt; (jQuery UI widget) that allows for multiple delimited values, parse hooks, autocomplete, keyboard shortcuts etc.",
 	"keywords": [
 		"multi-input",
 		"ui",
@@ -27,7 +27,7 @@
 	}
 	],
 	"bugs": "https://github.com/sproutsocial/inputosaurus-text/issues",
-	"homepage": "https://sproutsocial.github.com/inputosaurus-text",
+	"homepage": "http://sproutsocial.github.com/inputosaurus-text/",
 	"docs": "https://github.com/sproutsocial/inputosaurus-text/blob/master/README.md",
 	"dependencies": {
 		"jquery": ">=1.7",
