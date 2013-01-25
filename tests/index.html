@@ -129,7 +129,13 @@
 				instance.elements.ul.find('li:nth-child(2) a').trigger( event );
 
 				ok(instance.elements.input.val() === 'rocks', 'edited value exists in visible input');
-				ok(instance._chosenValues.length == 1, 'final value count correct');
+				ok(instance._chosenValues.length == 1, 'value count correct');
+
+				// double clicking on a tag to edit
+				event = $.Event( 'dblclick');
+				instance.elements.ul.find('li:nth-child(1) a').trigger( event );
+				ok(instance.elements.input.val() === 'sprout', 'double click edited value exists in visible input');
+				ok(instance._chosenValues.length == 0, 'final value count correct');
 			});
 
 		})(jQuery);

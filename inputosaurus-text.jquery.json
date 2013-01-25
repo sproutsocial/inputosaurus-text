@@ -1,0 +1,38 @@
+{
+	"name": "inputosaurus-text",
+	"title": "Inputosaurus Text",
+	"description": "An &lt;input&gt; that allows for multiple delimited values, parse hooks, autocomplete, keyboard shortcuts, etc.",
+	"keywords": [
+		"multi-input",
+		"ui",
+		"input",
+		"autocomplete"
+	],
+	"version": "0.1.5",
+	"author": {
+		"name": "Sprout Social",
+		"url": "https://github.com/sproutsocial/",
+		"email": "engineering_gravatar@sproutsocial.com"
+	},
+	"maintainers": [
+	{
+		"name": "Dan Kielp",
+		"email": "dan@sproutsocial.com",
+		"url": "http://sproutsocial.com"
+	}
+	],
+	"licenses": [
+	{
+		"type": "MIT",
+		"url": "https://github.com/sproutsocial/inputosaurus-text/blob/master/LICENSE"
+	}
+	],
+	"bugs": "https://github.com/sproutsocial/inputosaurus-text/issues",
+	"homepage": "https://github.com/sproutsocial/inputosaurus-text/",
+	"demo": "http://sproutsocial.github.com/inputosaurus-text/",
+	"docs": "https://github.com/sproutsocial/inputosaurus-text/blob/master/README.md",
+	"dependencies": {
+		"jquery": ">=1.7",
+		"jquery ui": ">=1.7"
+	}
+}
