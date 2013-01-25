@@ -20,7 +20,7 @@
 
 	var inputosaurustext = {
 
-		version: "0.1",
+		version: "0.1.5",
 
 		eventprefix: "inputosaurus",
 
@@ -39,6 +39,8 @@
 			outputDelimiter : ',',
 
 			allowDuplicates : false,
+
+			parseOnBlur : false,
 
 			// optional wrapper for widget
 			wrapperElement : null,
@@ -217,18 +219,24 @@
 		},
 
 		_editTag : function(ev) {
-			var tagName = '',
+			var widget = (ev && ev.data.widget) || this,
+				tagName = '',
 				tagKey = $(ev.currentTarget).closest('li').data('inputosaurus');
+
+			if(!tagKey){
+				return true;
+			}
 
 			ev.preventDefault();
 
-			$.each(this._chosenValues, function(i,v) {
+			$.each(widget._chosenValues, function(i,v) {
 				v.key === tagKey && (tagName = v.value);
 			});
 
-			this.elements.input.val(tagName);
+			widget.elements.input.val(tagName);
 
-			$(ev.currentTarget).trigger('click');
+			widget._removeTag(ev);
+			widget._resizeInput(ev);
 		},
 
 		_tagKeypress : function(ev) {
@@ -373,7 +381,7 @@
 		},
 
 		_removeTag : function(ev) {
-			var key = $(ev.currentTarget).parent().data('inputosaurus'),
+			var key = $(ev.currentTarget).closest('li').data('inputosaurus'),
 				indexFound = false,
 				widget = (ev && ev.data.widget) || this;
 
@@ -388,13 +396,16 @@
 
 			widget._setValue(widget._buildValue());
 
-			$(ev.currentTarget).parent().remove();
+			$(ev.currentTarget).closest('li').remove();
+			widget.elements.input.focus();
 		},
 
 		_focus : function(ev) {
 			var widget = (ev && ev.data.widget) || this;
 
-			widget.elements.input.focus();
+			if(!ev || !$(ev.target).closest('li').data('inputosaurus')){
+				widget.elements.input.focus();
+			}
 		},
 
 		_tagFocus : function(ev) {
@@ -428,10 +439,11 @@
 			this.elements.input.on('keydown.inputosaurus', {widget : widget}, this._inputKeypress);
 			this.elements.input.on('change.inputosaurus', {widget : widget}, this._inputKeypress);
 			this.elements.input.on('focus.inputosaurus', {widget : widget}, this._inputFocus);
-			this.elements.input.on('blur.inputosaurus', {widget : widget}, this.parseInput);
+			this.options.parseOnBlur && this.elements.input.on('blur.inputosaurus', {widget : widget}, this.parseInput);
 
 			this.elements.ul.on('click.inputosaurus', {widget : widget}, this._focus);
 			this.elements.ul.on('click.inputosaurus', 'a', {widget : widget}, this._removeTag);
+			this.elements.ul.on('dblclick.inputosaurus', 'li', {widget : widget}, this._editTag);
 			this.elements.ul.on('focus.inputosaurus', 'a', {widget : widget}, this._tagFocus);
 			this.elements.ul.on('blur.inputosaurus', 'a', {widget : widget}, this._tagFocus);
 			this.elements.ul.on('keydown.inputosaurus', 'a', {widget : widget}, this._tagKeypress);
