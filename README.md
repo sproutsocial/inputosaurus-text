@@ -5,3 +5,5 @@ Inputosaurus Text is a jQuery UI widget that represents (and is instantiated on)
 [Demo](http://sproutsocial.github.com/inputosaurus-text/)
 
 [Tests](http://sproutsocial.github.com/inputosaurus-text/tests/)
+
+*illustration by [@theskywatcher](https://twitter.com/theskywatcher)*
