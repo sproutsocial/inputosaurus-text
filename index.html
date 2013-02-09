@@ -25,6 +25,10 @@
 		  color : #655;
 		  line-height : 30px;
 	  }
+	  .muted.text-right{
+		  padding-right : 16%;
+		  text-align : right;
+	  }
 	  section{
 		  margin-left : 20px;
 	  }
@@ -68,6 +72,10 @@
 
   <body data-spy="scroll" data-target=".navbar">
 
+	<a style="position: absolute; top: 0; right: 0; border: 0; display: block; z-index: 10000;" href="https://github.com/sproutsocial/inputosaurus-text">
+		<img src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub">
+	</a>
+
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -90,8 +98,11 @@
 
     <div class="container">
 
-	  <h1 id="description"><a href="https://github.com/sproutsocial/inputosaurus-text" title="source codez">Inputosaurus Text</a></h1>
-	  <p>An &lt;input&gt; that allows for multiple delimited values, parse hooks, autocomplete, keyboard shortcuts etc.</p>
+	  <a href="https://github.com/sproutsocial/inputosaurus-text" title="source codez" id="description">
+		<img src="https://d672eyudr6aq1.cloudfront.net/img/input-o-saurus1.jpg" alt="Inputosaurus Text" />
+	  </a>
+	  <p class="muted text-right">illustration by <a href="https://twitter.com/theskywatcher">@theskywatcher</a></p>
+	  <p>Inputosaurus Text is an &lt;input&gt; that allows for multiple delimited values, parse hooks, autocomplete, keyboard shortcuts, etc.</p>
 
 		<h2 id="examples">Examples</h2>
 		<section class="examples">
@@ -230,6 +241,5 @@
 
 		prettyPrint();
 	</script>
-
   </body>
 </html>

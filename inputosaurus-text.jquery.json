@@ -1,7 +1,7 @@
 {
 	"name": "inputosaurus-text",
 	"title": "Inputosaurus Text",
-	"description": "An &lt;input&gt; that allows for multiple delimited values, parse hooks, autocomplete, keyboard shortcuts, etc.",
+	"description": "An <input> that allows for multiple delimited values, parse hooks, autocomplete, keyboard shortcuts, etc.",
 	"keywords": [
 		"multi-input",
 		"ui",
