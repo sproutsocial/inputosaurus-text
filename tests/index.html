@@ -138,6 +138,44 @@
 				ok(instance._chosenValues.length == 0, 'final value count correct');
 			});
 
+			test('clear', function(){
+				instance.element.val('sprout');
+				instance.refresh();
+				ok(instance._chosenValues.length == 1, 'initial value count correct');
+				
+				instance.options.enableSetValue = true;
+				
+				instance.element.val('').change();
+				ok(instance._chosenValues.length == 0, 'choosen values should be empty after clear');
+			});
+			
+			test('set more values', function(){
+				instance.element.val('sprout');
+				instance.refresh();
+				ok(instance._chosenValues.length == 1, 'initial value count correct');
+				
+				instance.options.enableSetValue = true;
+				
+				instance.element.val('chicago,il').change();				
+				ok(instance._chosenValues.length === 2, 'proper value count');
+				ok(instance._chosenValues[0].value === 'chicago', 'proper value string 0');
+				ok(instance._chosenValues[1].value === 'il', 'proper value string 1');
+				
+			});
+			
+			test('set values not enabled', function(){
+				instance.element.val('sprout');
+				instance.refresh();
+				ok(instance._chosenValues.length == 1, 'initial value count correct');
+				
+				instance.options.enableSetValue = false;
+				
+				instance.element.val('chicago,il').change();				
+				ok(instance._chosenValues.length === 1, 'proper value count');
+				ok(instance._chosenValues[0].value === 'sprout', 'proper value string 0');
+				
+			});
+			
 		})(jQuery);
 	</script>
 </body>

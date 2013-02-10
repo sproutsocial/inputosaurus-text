@@ -52,7 +52,9 @@
 
 			// manipulate and return the input value after parseInput() parsing
 			// the array of tag names is passed and expected to be returned as an array after manipulation
-			parseHook : null
+			parseHook : null,
+			
+			enableSetValue: false
 		},
 
 		_create: function() {
@@ -412,24 +414,34 @@
 			$(ev.currentTarget).parent()[ev.type === 'focusout' ? 'removeClass' : 'addClass']('inputosaurus-selected');
 		},
 
-		refresh : function() {
-			var delim = this.options.outputDelimiter,
-				val = this.element.val(),
+		refresh : function(ev) {
+			var widget = (ev && ev.data.widget) || this,
+				delim = widget.options.outputDelimiter,
+				val = widget.element.val(),
 				values = [];
 			
-			values.push(val);
-			delim && (values = val.split(delim));
+			widget._chosenValues = [];
 
-			if(values.length){
-				this._chosenValues = [];
-
-				$.isFunction(this.options.parseHook) && (values = this.options.parseHook(values));
-
-				this._setChosen(values);
-				this._renderTags();
-				this.elements.input.val('');
-				this._resizeInput();
+			if(val.length){
+				values.push(val);
+				delim && (values = val.split(delim));
+				$.isFunction(widget.options.parseHook) && (values = widget.options.parseHook(values));
+				widget._setChosen(values);	
+			} else {
+				widget._renderTags();
 			}
+			
+			widget._resizeInput();
+			widget.elements.input.val('');
+			
+		},
+		
+		_inputChanged : function(ev){
+			var widget = (ev && ev.data.widget) || this;
+			if (widget.options.enableSetValue){
+				widget.refresh(ev);
+			}
+			
 		},
 
 		_attachEvents : function() {
@@ -447,6 +459,9 @@
 			this.elements.ul.on('focus.inputosaurus', 'a', {widget : widget}, this._tagFocus);
 			this.elements.ul.on('blur.inputosaurus', 'a', {widget : widget}, this._tagFocus);
 			this.elements.ul.on('keydown.inputosaurus', 'a', {widget : widget}, this._tagKeypress);
+		
+			this.element.on('change', {widget:widget}, this._inputChanged);
+
 		},
 
 		_destroy: function() {
