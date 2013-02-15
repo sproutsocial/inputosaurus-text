@@ -431,8 +431,8 @@
 				widget._renderTags();
 			}
 			
-			widget._resizeInput();
 			widget.elements.input.val('');
+			widget._resizeInput();
 			
 		},
 		
