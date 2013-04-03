@@ -1,5 +1,5 @@
 .inputosaurus-container {
-	background-color:#ffffff;
+	background-color:#fff;
 	border:1px solid #bcbec0;
 	margin:0 5px 0 0;
 	padding:0 3px;
@@ -9,8 +9,9 @@
 	font-family : "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .inputosaurus-container li {
-	display : inline-block;
+	display : block;
 	float : left;
+	overflow: hidden;
 	margin : 2px 2px 0;
 	padding : 2px 3px;
 	white-space : nowrap;
@@ -19,13 +20,16 @@
 	-o-text-overflow:ellipsis;
 	-ms-text-overflow:ellipsis;
 	background-color:#e5eff7;
-	border:#bdd6eb solid 1px;
+	border:#a9cae4 solid 1px;
 	-webkit-border-radius:2px;
 	-moz-border-radius:2px;
-	-o-border-radius:2px;
 	border-radius:2px;
 	color:#5b9bcd;
+	-webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.75) inset;
+	-moz-box-shadow: 0 1px 0 rgba(255,255,255,0.75) inset;
+	box-shadow: 0 1px 0 rgba(255,255,255,0.75) inset;
 	line-height : 20px;
+	cursor: default;
 }
 .inputosaurus-container li.inputosaurus-selected { background-color:#bdd6eb; }
 .inputosaurus-container li a {
@@ -37,7 +41,8 @@
 }
 .inputosaurus-container .inputosaurus-input {
 	border:none;
-	background-color:#ffffff;
+	box-shadow: none;
+	background-color:#fff;
 	margin-top : 3px;
 }
 .inputosaurus-container .inputosaurus-input input {
