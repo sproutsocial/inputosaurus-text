@@ -67,11 +67,18 @@
 				ok(instance.elements.ul.find('li[data-inputosaurus="mi_1234"]').size() === 1, 'proper data attr on tag');
 			});
 
-			test('refresh', function(){
+			test('refresh', 4, function(){
 				instance.element.val('sprout');
 				instance.refresh();
 
 				ok(instance.elements.ul.children().size() === 3, 'proper number of <li> elements');
+				ok(instance._chosenValues.length === 1, 'proper value count - one chosen');
+
+				instance.element.val('');
+				instance.refresh();
+
+				ok(instance.elements.ul.children().size() === 2, 'proper number of <li> elements');
+				ok(instance._chosenValues.length === 0, 'proper value count - none chosen');
 			});
 
 			test('parseInput', function(){
