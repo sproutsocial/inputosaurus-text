@@ -134,7 +134,8 @@
 					<input type="text" id="widget2_reflect" class="original" disabled="disabled" />
 					<pre class="prettyprint linenums">$('#widget2').inputosaurus({
     width : '350px',
-    autoCompleteSource : ['alabama', 'illinois', 'kansas', 'kentucky', 'new york']
+    autoCompleteSource : ['alabama', 'illinois', 'kansas', 'kentucky', 'new york'],
+    activateFinalResult : true
 });</pre>
 				</div>
 			</div>
@@ -170,8 +171,14 @@
 			<ul>
 				<li>allowDuplicates <span>(type : Boolean :: default : false)</span></li>
 
-				<li>autoCompleteSource <span>(type : Array/String/Function :: default : [])</span>
-					<p class="alert alert-info">when specified, autocomplete will be instantiated</p>
+				<li>autoCompleteSource <span>(type : Array/String/Function :: default : '')</span>
+					<p class="alert alert-info">when specified, autocomplete will be instantiated and this value will be passed as the jQuery Autocomplete source</p>
+				</li>
+
+				<li>activateFinalResult <span>(type : Boolean :: default : false)</span>
+					<p class="alert alert-info">
+						when forcing users to select from an autocomplete list, allow them to press 'Enter' to select an item if it's the only option left
+					</p>
 				</li>
 
 				<li>inputDelimiters <span>(type : Array :: default : [',', ';'])</span>
@@ -219,6 +226,7 @@
 		$('#widget2').inputosaurus({
 			width : '350px',
 			autoCompleteSource : ['alabama', 'illinois', 'kansas', 'kentucky', 'new york'],
+			activateFinalResult : true,
 			change : function(ev){
 				$('#widget2_reflect').val(ev.target.value);
 			}

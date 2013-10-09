@@ -9,7 +9,7 @@
  * 	jQuery 1.7+
  * 	jQueryUI 1.8+ Core
  *
- * @version 0.1
+ * @version 0.1.6
  * @author Dan Kielp <dan@sproutsocial.com>
  * @created October 3,2012
  *
@@ -20,7 +20,7 @@
 
 	var inputosaurustext = {
 
-		version: "0.1.5",
+		version: "0.1.6",
 
 		eventprefix: "inputosaurus",
 
@@ -49,6 +49,9 @@
 
 			// simply passing an autoComplete source (array, string or function) will instantiate autocomplete functionality
 			autoCompleteSource : '',
+
+			// When forcing users to select from the autocomplete list, allow them to press 'Enter' to select an item if it's the only option left.
+			activateFinalResult : false,
 
 			// manipulate and return the input value after parseInput() parsing
 			// the array of tag names is passed and expected to be returned as an array after manipulation
@@ -107,7 +110,20 @@
 						widget.parseInput();
 					},
 					open : function() {
-						$(this).autocomplete('widget').width(widget.elements.ul.outerWidth());
+						var menu = $(this).data('autocomplete').menu,
+							$menuItems;
+						
+						menu.element.width(widget.elements.ul.outerWidth());
+
+						// auto-activate the result if it's the only one
+						if(widget.options.activateFinalResult){
+							$menuItems = menu.element.find('li');
+
+							// activate single item to allow selection upon pressing 'Enter'
+							if($menuItems.size() === 1){
+								menu[menu.activate ? 'activate' : 'focus']($.Event('click'), $menuItems);
+							}
+						}
 					}
 				});
 			}
@@ -144,7 +160,7 @@
 
 			if(delimiterFound !== false){
 				values = val.split(delimiterFound);
-			} else if(!ev || ev.which === $.ui.keyCode.ENTER){
+			} else if(!ev || ev.which === $.ui.keyCode.ENTER && !$('.ui-menu-item .ui-state-focus').size() && !$('#ui-active-menuitem').size()){
 				values.push(val);
 				ev && ev.preventDefault();
 
@@ -320,8 +336,9 @@
 					obj = {
 						key : '',
 						value : ''
-					},
-					v = $.trim(v);
+					};
+
+				v = $.trim(v);
 
 				$.each(self._chosenValues, function(kk,vv) {
 					vv.value === v && (exists = true);
@@ -362,7 +379,7 @@
 		// @name text for tag
 		// @className optional className for <li>
 		_createTag : function(name, key, className) {
-			var className = className ? ' class="' + className + '"' : '';
+			className = className ? ' class="' + className + '"' : '';
 
 			if(name !== undefined){
 				return $('<li' + className + ' data-inputosaurus="' + key + '"><span>' + name + '</span> <a href="javascript:void(0);" class="ficon">&#x2716;</a></li>');
