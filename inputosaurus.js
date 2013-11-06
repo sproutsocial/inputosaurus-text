@@ -55,13 +55,17 @@
 
 			// manipulate and return the input value after parseInput() parsing
 			// the array of tag names is passed and expected to be returned as an array after manipulation
-			parseHook : null
+			parseHook : null,
+			
+			// define a placeholder to display when the input is empty
+			placeholder: null,
 		},
 
 		_create: function() {
 			var widget = this,
 				els = {},
-				o = widget.options;
+				o = widget.options,
+				placeholder =  o.placeholder || this.element.attr('placeholder') || null;
 				
 			this._chosenValues = [];
 
@@ -70,6 +74,15 @@
 			els.input = $('<input type="text" />');
 			els.inputCont = $('<li class="inputosaurus-input inputosaurus-required"></li>');
 			els.origInputCont = $('<li class="inputosaurus-input-hidden inputosaurus-required">');
+			
+			// define starting placeholder
+			if (placeholder) { 
+				o.placeholder = placeholder;
+				els.input.attr('placeholder', o.placeholder); 
+				if (o.width) {
+					els.input.css('min-width', o.width - 50);
+				}
+			}
 
 			o.wrapperElement && o.wrapperElement.append(els.ul);
 			this.element.replaceWith(o.wrapperElement || els.ul);
@@ -176,6 +189,8 @@
 				widget.elements.input.val('');
 				widget._resizeInput();
 			}
+
+			widget._resetPlaceholder();
 		},
 
 		_inputFocus : function(ev) {
@@ -217,6 +232,18 @@
 				txtWidth = 25 + val.length * 8;
 
 			widget.elements.input.width(txtWidth < maxWidth ? txtWidth : maxWidth);
+		},
+		
+		// resets placeholder on representative input
+		_resetPlaceholder: function () {
+			var placeholder = this.options.placeholder,
+				input = this.elements.input,
+				width = this.options.width || 'inherit';
+			if (placeholder && this.element.val().length === 0) {
+				input.attr('placeholder', placeholder).css('min-width', width - 50)
+			}else {
+				input.attr('placeholder', '').css('min-width', 'inherit')
+			}
 		},
 
 		// if our input contains no value and backspace has been pressed, select the last tag
