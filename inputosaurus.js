@@ -64,7 +64,8 @@
 		_create: function() {
 			var widget = this,
 				els = {},
-				o = widget.options;
+				o = widget.options,
+				placeholder =  o.placeholder || this.element.attr('placeholder') || null;
 				
 			this._chosenValues = [];
 
@@ -73,8 +74,10 @@
 			els.input = $('<input type="text" />');
 			els.inputCont = $('<li class="inputosaurus-input inputosaurus-required"></li>');
 			els.origInputCont = $('<li class="inputosaurus-input-hidden inputosaurus-required">');
-
-			if (o.placeholder) { 
+			
+			// define starting placeholder
+			if (placeholder) { 
+				o.placeholder = placeholder;
 				els.input.attr('placeholder', o.placeholder); 
 				if (o.width) {
 					els.input.css('min-width', o.width - 50);
