@@ -123,9 +123,14 @@
 						widget.parseInput();
 					},
 					open : function() {
-						var menu = $(this).data('autocomplete').menu,
+						// Older versions of jQueryUI have a different namespace
+						var auto =  $(this).data('ui-autocomplete') || $(this).data('autocomplete');
+						var menu = auto.menu,
 							$menuItems;
 						
+						
+						// zIndex will force the element on top of anything (like a dialog it's in)
+						menu.element.zIndex && menu.element.zIndex($(this).zIndex() + 1);
 						menu.element.width(widget.elements.ul.outerWidth());
 
 						// auto-activate the result if it's the only one
@@ -145,7 +150,7 @@
 		_autoCompleteMenuPosition : function() {
 			var widget;
 			if(this.options.autoCompleteSource){
-				widget = this.elements.input.data('autocomplete');
+				widget = this.elements.input.data('ui-autocomplete') || this.elements.input.data('autocomplete');
 				widget && widget.menu.element.position({
 					of: this.elements.ul,
 					my: 'left top',
