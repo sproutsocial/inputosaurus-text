@@ -61,7 +61,7 @@
 			placeholder: null,
 			
 			// when you check for duplicates it check for the case
-			caseSensitiveDuplicates: true,
+			caseSensitiveDuplicates: false
 		},
 
 		_create: function() {
