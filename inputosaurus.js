@@ -59,6 +59,9 @@
 			
 			// define a placeholder to display when the input is empty
 			placeholder: null,
+			
+			// when you check for duplicates it check for the case
+			caseSensitiveDuplicates: true,
 		},
 
 		_create: function() {
@@ -373,7 +376,12 @@
 				v = $.trim(v);
 
 				$.each(self._chosenValues, function(kk,vv) {
-					vv.value === v && (exists = true);
+					if(!self.options.caseSensitiveDuplicates){
+						vv.value.toLowerCase() === v.toLowerCase() && (exists = true);
+					}
+					else{
+						vv.value === v && (exists = true);
+					}
 				});
 
 				if(v !== '' && (!exists || self.options.allowDuplicates)){
