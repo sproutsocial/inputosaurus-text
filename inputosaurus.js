@@ -58,7 +58,7 @@
 			parseHook : null,
 			
 			// define a placeholder to display when the input is empty
-			placeholder: null,
+			placeholder: null
 		},
 
 		_create: function() {
