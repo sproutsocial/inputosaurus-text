@@ -272,7 +272,8 @@
 		_editTag : function(ev) {
 			var widget = (ev && ev.data.widget) || this,
 				tagName = '',
-				tagKey = $(ev.currentTarget).closest('li').data('inputosaurus');
+				$closest = $(ev.currentTarget).closest('li'),
+				tagKey = $closest.data('ui-inputosaurus') ||  $closest.data('inputosaurus');
 
 			if(!tagKey){
 				return true;
@@ -438,7 +439,8 @@
 		},
 
 		_removeTag : function(ev) {
-			var key = $(ev.currentTarget).closest('li').data('inputosaurus'),
+			var $closest = $(ev.currentTarget).closest('li'), 
+				key = $closest.data('ui-inputosaurus') || $closest.data('inputosaurus'),
 				indexFound = false,
 				widget = (ev && ev.data.widget) || this;
 
@@ -458,9 +460,11 @@
 		},
 
 		_focus : function(ev) {
-			var widget = (ev && ev.data.widget) || this;
+			var widget = (ev && ev.data.widget) || this,
+				$closest = $(ev.target).closest('li'),
+				$data = $closest.data('ui-inputosaurus') || $closest.data('inputosaurus');
 
-			if(!ev || !$(ev.target).closest('li').data('inputosaurus')){
+			if(!ev || !$data){
 				widget.elements.input.focus();
 			}
 		},
