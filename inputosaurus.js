@@ -460,9 +460,11 @@
 		},
 
 		_focus : function(ev) {
+      if(!ev)
+        return;
 			var widget = (ev && ev.data.widget) || this,
-				$closest = ev && $(ev.target).closest('li'),
-				$data = $closest && $closest.data('ui-inputosaurus') || $closest && $closest.data('inputosaurus');
+				$closest = $(ev.target).closest('li'),
+				$data = $closest.data('ui-inputosaurus') || $closest.data('inputosaurus');
 
 			if(!ev || !$data){
 				widget.elements.input.focus();
