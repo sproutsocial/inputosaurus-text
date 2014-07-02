@@ -461,8 +461,8 @@
 
 		_focus : function(ev) {
 			var widget = (ev && ev.data.widget) || this,
-				$closest = $(ev.target).closest('li'),
-				$data = $closest.data('ui-inputosaurus') || $closest.data('inputosaurus');
+				$closest = ev && $(ev.target).closest('li'),
+				$data = $closest && $closest.data('ui-inputosaurus') || $closest && $closest.data('inputosaurus');
 
 			if(!ev || !$data){
 				widget.elements.input.focus();
