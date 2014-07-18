@@ -460,13 +460,8 @@
 		},
 
 		_focus : function(ev) {
-			var widget = (ev && ev.data.widget) || this,
-				$closest = $(ev.target).closest('li'),
-				$data = $closest.data('ui-inputosaurus') || $closest.data('inputosaurus');
-
-			if(!ev || !$data){
-				widget.elements.input.focus();
-			}
+			var widget = (ev && ev.data.widget) || this;
+			widget.elements.input.focus();
 		},
 
 		_tagFocus : function(ev) {
