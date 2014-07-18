@@ -181,7 +181,7 @@
 
 			if(delimiterFound !== false){
 				values = val.split(delimiterFound);
-			} else if(!ev || ev.which === $.ui.keyCode.ENTER && !$('.ui-menu-item .ui-state-focus').size() && !$('#ui-active-menuitem').size()){
+			} else if(!ev || ev.which === $.ui.keyCode.ENTER && !$('.ui-menu-item.ui-state-focus').size() && !$('.ui-menu-item .ui-state-focus').size() && !$('#ui-active-menuitem').size()){
 				values.push(val);
 				ev && ev.preventDefault();
 
