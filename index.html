@@ -164,6 +164,33 @@
 				</div>
 			</div>
 		</article>
+
+    <article>
+			<h3>Send Tags by ajax request</h3>
+			<p>
+				- You can use this feature, if you wish perform a ajax request automatically after add/remove/edit a tag.<br />
+				- Otherwise, you can pass a <strong>change</strong> event in inputosaurus option and customize you action!!
+			</p>
+			<input type="text" value="" id="widget4" />
+			<div class="markup">
+				<a href="javascript:void(0);">toggle hidden input/markup</a>
+				<div>
+					<input type="text" id="widget4_reflect" class="original" disabled="disabled" />
+					<pre class="prettyprint linenums">$('#widget3').inputosaurus({
+    width : '350px',
+    submitTags : {
+      url : 'some/server_url',
+      data : {
+        customValue:'test'
+      },
+      success : function(response){
+        //Handle a response data of your ajax request here
+      }
+    }
+});</pre>
+				</div>
+			</div>
+		</article>
 		</section>
 
 		<h2>Options</h2>
@@ -180,7 +207,7 @@
 						when forcing users to select from an autocomplete list, allow them to press 'Enter' to select an item if it's the only option left
 					</p>
 				</li>
-				
+
 				<li>caseSensitiveDuplicates <span>(type : Boolean :: default : false)</span>
 					<p class="alert alert-info">consider duplicated elements only if they are exactly equal (checking the case)</p>
 				</li>
@@ -200,6 +227,10 @@
 
 				<li>parseOnBlur <span>(type : Boolean :: default : false)</span></li>
 
+        <li>submitTags <span>(type : Object :: default : null)</span>
+					<p class="alert alert-info">You can pass a object value like a config of $.ajax jQuery method</p>
+				</li>
+
 				<li>width <span>(type : String/Integer :: default : null)</span></li>
 
 				<li>wrapperElement <span>(type : String :: default : null)</span>
@@ -207,6 +238,19 @@
 				</li>
 
 			</ul>
+
+      <section id="bind-events">
+        <h3>Bindable Events</h3>
+
+        <ul>
+          <li>change<span> (type : Function :: default : Empty Function</span>
+            <p class="alert alert-info">Custom callback called after change value in input tags (add/remove/edit tag values)</p>
+          </li>
+          <li>keyup <span> (type: Function :: default : Empty Function</span>
+            <p class="alert alert-info">Custom callback to keyup event on the newly created input</p>
+          </li>
+        </ul>
+      </section>
 		</section>
     </div> <!-- /container -->
 
@@ -215,7 +259,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
-	
+
     <script src="./inputosaurus.js"></script>
 	<script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
 	<script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
@@ -248,6 +292,19 @@
 				$('#widget3_reflect').val(ev.target.value);
 			}
 		});
+
+    $('#widget4').inputosaurus({
+      width: '350px',
+      submitTags: {
+        url: 'some/server_url',
+        data:{
+          customValue:'test'
+        },
+        success:function(response){
+          //Handle a response data of your ajax request here
+        }
+      }
+    });
 
 		$('.markup').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
 
