@@ -1,5 +1,5 @@
 /**
- * Inputosaurus Text 
+ * Inputosaurus Text
  *
  * Must be instantiated on an <input> element
  * Allows multiple input items. Each item is represented with a removable tag that appears to be inside the input area.
@@ -30,7 +30,7 @@
 			//
 			// 'change' - triggered whenever a tag is added or removed (should be similar to binding the the change event of the instantiated input
 			// 'keyup' - keyup event on the newly created input
-			
+
 			// while typing, the user can separate values using these delimiters
 			// the value tags are created on the fly when an inputDelimiter is detected
 			inputDelimiters : [',', ';'],
@@ -56,12 +56,15 @@
 			// manipulate and return the input value after parseInput() parsing
 			// the array of tag names is passed and expected to be returned as an array after manipulation
 			parseHook : null,
-			
+
 			// define a placeholder to display when the input is empty
 			placeholder: null,
-			
+
 			// when you check for duplicates it check for the case
-			caseSensitiveDuplicates: false
+			caseSensitiveDuplicates: false,
+
+			//Ajax options to send tags
+			submitTags: null
 		},
 
 		_create: function() {
@@ -69,7 +72,7 @@
 				els = {},
 				o = widget.options,
 				placeholder =  o.placeholder || this.element.attr('placeholder') || null;
-				
+
 			this._chosenValues = [];
 
 			// Create the elements
@@ -77,11 +80,11 @@
 			els.input = $('<input type="text" />');
 			els.inputCont = $('<li class="inputosaurus-input inputosaurus-required"></li>');
 			els.origInputCont = $('<li class="inputosaurus-input-hidden inputosaurus-required">');
-			
+
 			// define starting placeholder
-			if (placeholder) { 
+			if (placeholder) {
 				o.placeholder = placeholder;
-				els.input.attr('placeholder', o.placeholder); 
+				els.input.attr('placeholder', o.placeholder);
 				if (o.width) {
 					els.input.css('min-width', o.width - 50);
 				}
@@ -90,11 +93,11 @@
 			o.wrapperElement && o.wrapperElement.append(els.ul);
 			this.element.replaceWith(o.wrapperElement || els.ul);
 			els.origInputCont.append(this.element).hide();
-			
+
 			els.inputCont.append(els.input);
 			els.ul.append(els.inputCont);
 			els.ul.append(els.origInputCont);
-			
+
 			o.width && els.ul.css('width', o.width);
 
 			this.elements = els;
@@ -130,8 +133,8 @@
 						var auto =  $(this).data('ui-autocomplete') || $(this).data('autocomplete');
 						var menu = auto.menu,
 							$menuItems;
-						
-						
+
+
 						// zIndex will force the element on top of anything (like a dialog it's in)
 						menu.element.zIndex && menu.element.zIndex($(this).zIndex() + 1);
 						menu.element.width(widget.elements.ul.outerWidth());
@@ -241,7 +244,7 @@
 
 			widget.elements.input.width(txtWidth < maxWidth ? txtWidth : maxWidth);
 		},
-		
+
 		// resets placeholder on representative input
 		_resetPlaceholder: function () {
 			var placeholder = this.options.placeholder,
@@ -266,7 +269,7 @@
 				ev.preventDefault();
 				lastTag.find('a').focus();
 			}
-			
+
 		},
 
 		_editTag : function(ev) {
@@ -285,6 +288,7 @@
 				v.key === tagKey && (tagName = v.value);
 			});
 
+			widget.beforeEditValue = widget.element.val();
 			widget.elements.input.val(tagName);
 
 			widget._removeTag(ev);
@@ -295,7 +299,7 @@
 			var widget = ev.data.widget;
 			switch(ev.which){
 
-				case $.ui.keyCode.BACKSPACE: 
+				case $.ui.keyCode.BACKSPACE:
 					ev && ev.preventDefault();
 					ev && ev.stopPropagation();
 					$(ev.currentTarget).trigger('click');
@@ -409,11 +413,18 @@
 		},
 
 		_setValue : function(value) {
+
+			if(arguments[1] && (arguments[1].type == 'dblclick' && value == '')){
+				return false;
+			}
 			var val = this.element.val();
 
 			if(val !== value){
 				this.element.val(value);
 				this._trigger('change');
+				if($.isPlainObject(this.options.submitTags)){
+					this._sendTags();
+				}
 			}
 		},
 
@@ -439,7 +450,7 @@
 		},
 
 		_removeTag : function(ev) {
-			var $closest = $(ev.currentTarget).closest('li'), 
+			var $closest = $(ev.currentTarget).closest('li'),
 				key = $closest.data('ui-inputosaurus') || $closest.data('inputosaurus'),
 				indexFound = false,
 				widget = (ev && ev.data.widget) || this;
@@ -453,7 +464,7 @@
 
 			indexFound !== false && widget._chosenValues.splice(indexFound, 1);
 
-			widget._setValue(widget._buildValue());
+			widget._setValue(widget._buildValue(),ev);
 
 			$(ev.currentTarget).closest('li').remove();
 			widget.elements.input.focus();
@@ -477,7 +488,7 @@
 			var delim = this.options.outputDelimiter,
 				val = this.element.val(),
 				values = [];
-			
+
 			values.push(val);
 			delim && (values = val.split(delim));
 
@@ -515,9 +526,26 @@
 
 			this.elements.ul.replaceWith(this.element);
 
+		},
+
+		_sendTags: function(){
+
+			var requestTags = this.options.submitTags;
+			if(this.element.val() != '' && this.beforeEditValue != this.element.val()) {
+
+				opts = $.extend({
+					url: requestTags.url,
+					dataType: 'json',
+					data:{},
+					type:'POST'
+				},requestTags);
+
+				opts.data.tag_list = this.element.val();
+
+				$.ajax(opts);
+			}
 		}
 	};
 
 	$.widget("ui.inputosaurus", inputosaurustext);
 })(jQuery);
-
