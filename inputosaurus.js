@@ -417,7 +417,7 @@
 			if(arguments[1] && (arguments[1].type == 'dblclick' && value == '')){
 				return false;
 			}
-			var val = this.element.val();
+			var val = this.element.val().replace(/,\s*/g,',');
 
 			if(val !== value){
 				this.element.val(value);
@@ -540,6 +540,17 @@
 					type:'POST'
 				},requestTags);
 
+				var extraValues = this.element.data('submit-values');
+				if(typeof extraValues == 'string' && /\{*/.test(extraValues)){
+					extraValues = $.parseJSON(extraValues.replace(/\'/g,'\"'));
+				}
+
+				if(!$.isEmptyObject(extraValues)){
+					for(v in extraValues){
+						opts.data[v] = extraValues[v];
+					}
+				}
+
 				opts.data.tag_list = this.element.val();
 
 				$.ajax(opts);
@@ -548,4 +559,4 @@
 	};
 
 	$.widget("ui.inputosaurus", inputosaurustext);
-})(jQuery);
+})($ || jQuery);
