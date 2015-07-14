@@ -288,7 +288,7 @@
 				v.key === tagKey && (tagName = v.value);
 			});
 
-			widget.beforeEditValue = widget.element.val();
+			widget.beforeEditValue = widget.element.val().replace(/,\s*/g,',');
 			widget.elements.input.val(tagName);
 
 			widget._removeTag(ev);
@@ -412,18 +412,21 @@
 			return value;
 		},
 
-		_setValue : function(value) {
+		_setValue : function(value,ev) {
 
-			if(arguments[1] && (arguments[1].type == 'dblclick' && value == '')){
-				return false;
-			}
 			var val = this.element.val().replace(/,\s*/g,',');
 
 			if(val !== value){
 				this.element.val(value);
 				this._trigger('change');
+
 				if($.isPlainObject(this.options.submitTags)){
-					this._sendTags();
+
+					if(ev && ev.type == 'dblclick'){
+						return false;
+					}
+
+					this._sendTags(ev);
 				}
 			}
 		},
@@ -463,6 +466,12 @@
 			});
 
 			indexFound !== false && widget._chosenValues.splice(indexFound, 1);
+
+			if (!widget.beforeEditValue) {
+				 ev.data.sourceEvent = 'remove';
+			}else{
+				 ev.data.sourceEvent = 'edit';
+			}
 
 			widget._setValue(widget._buildValue(),ev);
 
@@ -528,16 +537,22 @@
 
 		},
 
-		_sendTags: function(){
+		_sendTags: function(ev){
 
 			var requestTags = this.options.submitTags;
-			if(this.element.val() != '' && this.beforeEditValue != this.element.val()) {
+			var event = ev || {type:'',data:{}};
+
+			if((event.data.sourceEvent == 'remove')
+				 || (this.element.val() != '' && this.beforeEditValue != this.element.val())) {
+
+					this.beforeEditValue = '';
 
 				opts = $.extend({
 					url: requestTags.url,
 					dataType: 'json',
 					data:{},
-					type:'POST'
+					type:'POST',
+					context:this
 				},requestTags);
 
 				var extraValues = this.element.data('submit-values');
