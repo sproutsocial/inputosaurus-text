@@ -61,7 +61,10 @@
 			placeholder: null,
 			
 			// when you check for duplicates it check for the case
-			caseSensitiveDuplicates: false
+			caseSensitiveDuplicates: false,
+
+			// can sort tags
+			sortable: false
 		},
 
 		_create: function() {
@@ -77,6 +80,11 @@
 			els.input = $('<input type="text" />');
 			els.inputCont = $('<li class="inputosaurus-input inputosaurus-required"></li>');
 			els.origInputCont = $('<li class="inputosaurus-input-hidden inputosaurus-required">');
+
+			if(widget.options.sortable){
+				els.ul.sortable();
+				els.ul.disableSelection();
+			}
 			
 			// define starting placeholder
 			if (placeholder) { 
@@ -473,6 +481,33 @@
 			$(ev.currentTarget).parent()[ev.type === 'focusout' ? 'removeClass' : 'addClass']('inputosaurus-selected');
 		},
 
+		_tagMouseup : function (e) {
+			const widget = (e && e.data.widget) || this,
+				currentValue = $(e.currentTarget).find('span').html();
+			let result = [];
+
+			$(e.currentTarget).parent().find("li:not('.inputosaurus-required')").each(function (i, el) {
+				let value = $(el).find('span').html();
+				let index = $.inArray(value, result);
+
+				if(value === undefined) {
+					value = currentValue;
+
+					if(index !== -1){
+						result.splice(index, 1);
+						result.push(value)
+					}
+				}
+
+				if(index !== -1) {
+					return
+				}else{
+					result.push(value);
+				}
+			});
+			widget._setValue(result);
+		},
+
 		refresh : function() {
 			var delim = this.options.outputDelimiter,
 				val = this.element.val(),
@@ -508,6 +543,7 @@
 			this.elements.ul.on('focus.inputosaurus', 'a', {widget : widget}, this._tagFocus);
 			this.elements.ul.on('blur.inputosaurus', 'a', {widget : widget}, this._tagFocus);
 			this.elements.ul.on('keydown.inputosaurus', 'a', {widget : widget}, this._tagKeypress);
+			this.elements.ul.on('mouseup.inputosaurus', 'li', {widget : widget}, this._tagMouseup);
 		},
 
 		_destroy: function() {

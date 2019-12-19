@@ -164,6 +164,19 @@
 				</div>
 			</div>
 		</article>
+		<article>
+			<h3>Sortable tags</h3>
+			<input type="text" id="widget4" value="tag1,tag2,tag3"/>
+			<div class="markup">
+				<a href="javascript:void(0);">+ jQuery UI sortable plugin</a>
+				<div>
+					<input type="text" id="widget4_reflect" class="original" disabled="disabled" />
+					<pre class="prettyprint linenums">$('#widget4').inputosaurus({
+    sortable: true
+});</pre>
+				</div>
+			</div>
+		</article>
 		</section>
 
 		<h2>Options</h2>
@@ -202,9 +215,12 @@
 
 				<li>width <span>(type : String/Integer :: default : null)</span></li>
 
+				<li>sortable <span>(type : Boolean :: default : false)</span></li>
+
 				<li>wrapperElement <span>(type : String :: default : null)</span>
 					<p class="alert alert-info">optional wrapper for widget</p>
 				</li>
+
 
 			</ul>
 		</section>
@@ -227,6 +243,7 @@
 				$('#widget1_reflect').val(ev.target.value);
 			}
 		});
+
 		$('#widget2').inputosaurus({
 			width : '350px',
 			autoCompleteSource : ['alabama', 'illinois', 'kansas', 'kentucky', 'new york'],
@@ -247,6 +264,9 @@
 			change : function(ev){
 				$('#widget3_reflect').val(ev.target.value);
 			}
+		});
+		$('#widget4').inputosaurus({
+			sortable : true
 		});
 
 		$('.markup').on('click', 'a', function(ev){ $(ev.currentTarget).next('div').toggle(); });
