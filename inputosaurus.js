@@ -488,20 +488,16 @@
 
 			$(e.currentTarget).parent().find("li:not('.inputosaurus-required')").each(function (i, el) {
 				let value = $(el).find('span').html();
-				let index = $.inArray(value, result);
-
 				if(value === undefined) {
 					value = currentValue;
-
+					let index = $.inArray(value, result);
 					if(index !== -1){
 						result.splice(index, 1);
 						result.push(value)
 					}
 				}
-
-				if(index !== -1) {
-					return
-				}else{
+				let index = $.inArray(value, result);
+				if(index === -1) {
 					result.push(value);
 				}
 			});
