@@ -501,7 +501,7 @@
 					result.push(value);
 				}
 			});
-			widget._setValue(result);
+      widget._setValue(result.join(widget.options.outputDelimiter));
 		},
 
 		refresh : function() {
